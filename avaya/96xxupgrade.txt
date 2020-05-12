@@ -1,0 +1,168 @@
+IF $SIG SEQ 0 GOTO SIP_SECTION
+IF $SIG SEQ 1 GOTO H323_SECTION
+IF $SIG SEQ 2 GOTO SIP_SECTION
+
+# H323_SECTION
+
+############################################################  
+##                                                        ##
+## AVAYA 96XX IP TELEPHONE SOFTWARE UPGRADE CONFIGURATION ##
+##           *** Nov 22,2011 ***                          ##
+##                                                        ##
+## This file upgrades the following telephones            ##
+## to the indicated releases:                             ##
+##    9610 -  Release 3.1 SP3                             ##
+##    9620 -  Release 3.1 SP3                             ##
+##    9630 -  Release 3.1 SP3                             ##
+##    9630G - Release 3.1 SP3                             ##
+##    9640 -  Release 3.1 SP3                             ##
+##    9640G - Release 3.1 SP3                             ##
+##    9650 -  Release 3.1 SP3                             ##
+##    9670 -  Release 3.1 SP3                             ##
+##                                                        ##
+############################################################
+##                                                        ##
+## BACKUP APPLICATION VERSION NUMBERS                     ##
+##    96xx - 3.1 SP3                                      ##
+##                                                        ##
+############################################################
+##                                                        ##
+## PHONE APPLICATION VERSION NUMBERS                      ##
+##    9610 -  3.1 SP3                                     ##
+##    9620 -  3.1 SP3                                     ##
+##    9630 -  3.1 SP3                                     ##
+##    9630G - 3.1 SP3                                     ##
+##    9640 -  3.1 SP3                                     ##
+##    9640G - 3.1 SP3                                     ##
+##    9650 -  3.1 SP3                                     ##
+##    9670 -  3.1 SP3                                     ##
+##                                                        ##
+############################################################
+
+
+############################################################
+##            Check backup application version            ##           
+############################################################
+
+IF $MODEL4 SEQ 9610 goto H323_SECTION_BACKUPAPP96XX
+IF $MODEL4 SEQ 9620 goto H323_SECTION_BACKUPAPP96XX
+IF $MODEL4 SEQ 9630 goto H323_SECTION_BACKUPAPP96XX
+IF $MODEL4 SEQ 9640 goto H323_SECTION_BACKUPAPP96XX
+IF $MODEL4 SEQ 9650 goto H323_SECTION_BACKUPAPP96XX
+IF $MODEL4 SEQ 9670 goto H323_SECTION_BACKUPAPP9670
+goto H323_SECTION_END
+
+# H323_SECTION_BACKUPAPP96XX
+IF $VPNACTIVE SEQ 1 GOTO PHONEAPP96XX
+IF $BOOTNAME SEQ hb96xxua3_1_03_S.bin goto H323_SECTION_PHONEAPP96XX
+SET APPNAME hb96xxua3_1_03_S.bin
+goto H323_SECTION_GETSET
+
+# H323_SECTION_BACKUPAPP9670
+IF $VPNACTIVE SEQ 1 GOTO PHONEAPP9670
+IF $BOOTNAME SEQ hb9670ua3_1_03_S.bin goto H323_SECTION_PHONEAPP9670
+SET APPNAME hb9670ua3_1_03_S.bin
+goto H323_SECTION_GETSET
+
+############################################################
+##            Check phone application version             ##           
+############################################################
+
+# H323_SECTION_PHONEAPP96XX
+SET APPNAME ha96xxua3_1_03_S.bin
+goto H323_SECTION_GETSET
+
+# H323_SECTION_PHONEAPP9670
+SET APPNAME ha9670ua3_1_03_S.bin
+goto H323_SECTION_GETSET
+
+############################################################
+##           Get additional configuration files           ##           
+############################################################
+
+# H323_SECTION_GETSET
+GET 46xxsettings.txt
+
+# H323_SECTION_END
+
+goto FILE_END
+
+# SIP_SECTION
+
+############################################################  
+##                                                        ##
+## AVAYA 96XX IP TELEPHONE SOFTWARE UPGRADE CONFIGURATION ##
+##     SIP FIRMWARE RELEASE 2.6.6.0 October,2011          ##
+##                                                        ##
+## This file upgrades the following telephones            ##
+## to the indicated releases:                             ##
+##    9610  - Not Supported                               ##
+##    9620  - SIP Release 2.6.6.0                         ##
+##    9630  - SIP Release 2.6.6.0                         ##
+##    9630G - SIP Release 2.6.6.0                         ##
+##    9640  - SIP Release 2.6.6.0                         ##
+##    9640G - SIP Release 2.6.6.0                         ##
+##    9650  - SIP Release 2.6.6.0                         ##
+##                                                        ##
+############################################################
+##                                                        ##
+## BACKUP APPLICATION VERSION NUMBERS                     ##
+##    96xx - H.323 3.0                                    ##
+##                                                        ##
+############################################################
+##                                                        ##
+## PHONE APPLICATION VERSION NUMBERS                      ##
+##    9610  - N/A                                         ##
+##    9620  - SIP Release 2.6.6.0                         ##
+##    9630  - SIP Release 2.6.6.0                         ##
+##    9630G - SIP Release 2.6.6.0                         ##
+##    9640  - SIP Release 2.6.6.0                         ##
+##    9640G - SIP Release 2.6.6.0                         ##
+##    9650  - SIP Release 2.6.6.0                         ##
+##                                                        ##
+############################################################
+
+
+############################################################
+##            Check backup application version            ##           
+############################################################
+
+IF $SIG SEQ 1 GOTO GETSET
+
+IF $MODEL4 SEQ 9620 goto BACKUPAPP96XX
+IF $MODEL4 SEQ 9630 goto BACKUPAPP96XX
+IF $MODEL4 SEQ 9630G goto BACKUPAPP96XX
+IF $MODEL4 SEQ 9640 goto BACKUPAPP96XX
+IF $MODEL4 SEQ 9640G goto BACKUPAPP96XX
+IF $MODEL4 SEQ 9650 goto BACKUPAPP96XX
+goto END
+
+# BACKUPAPP96XX
+IF $BOOTNAME SEQ hb96xxua3_00.bin goto PHONEAPP96XX
+SET APPNAME hb96xxua3_00.bin
+goto GETSET
+
+
+############################################################
+##            Check phone application version             ##           
+############################################################
+
+# PHONEAPP96XX
+SET APPNAME SIP96xx_2_6_6_0.bin
+goto GETSET
+
+
+############################################################
+##           Get additional configuration files           ##           
+############################################################
+
+# GETSET
+GET 46xxsettings.txt
+
+
+# END
+
+
+goto FILE_END
+
+# FILE_END

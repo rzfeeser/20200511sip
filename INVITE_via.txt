@@ -1,0 +1,22 @@
+Alice               one.test                two.test                Bob
+
+INVITE ---------------->
+via: alice
+                        ------------------------->
+                        via: one.test
+                        via: alice
+                                                 ---------------------->
+                                                 via: two.test
+                                                 via: one.test
+                                                 via: alice
+
+
+                                                 <---------------------180
+                                                               via: two.test
+                                                               via: one.test
+                                                               via: alice
+                        <------------------------
+                                   via: one.test
+                                   via: alice
+<-----------------------
+              via: alice
