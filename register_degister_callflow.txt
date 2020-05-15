@@ -1,0 +1,86 @@
+REGISTER Diagram
+================
+alice                                           Proxy
+REGISTER sip:example.com ------------------->
+From: 475692@example.com
+To: 475692@example.com
+Contact: 475692@10.10.4.12;expires=3600
+
+<--------------------------------------- 401
+                    www-authenticate: (nonce)
+
+REGISTER sip:example.com ------------------->
+From: 475692@example.com
+To: 475692@example.com
+Contact: 475692@10.10.4.12;expires=3600
+Auth: md5(nonce+uri+domain+user+p******d) = result
+
+<--------------------------------------200
+                        expires: 3600 (sec) 
+                        
+                        
+de-REGISTER diagram
+===================
+alice                                           Proxy
+REGISTER sip:example.com ------------------->
+From: 475692@example.com
+To: 475692@example.com
+Contact: 475692@10.10.4.12;expires=0
+
+<--------------------------------------- 401
+                    www-authenticate: (nonce)
+
+REGISTER sip:example.com ------------------->
+From: 475692@example.com
+To: 475692@example.com
+Contact: 475692@10.10.4.12;expires=0
+Auth: md5(nonce+uri+domain+user+p******d) = result
+
+<--------------------------------------200
+                        expires:0 (you are no longer registered)
+                        
+                        
+
+                        
+                        
+INVITE diagram (Alice calls Bob)
+================================
+                            (example.com)
+Alice                           Proxy                               Bob
+INVITE bob@example.com -----------> INVITE bob@IP ------------------>
+from: alice@example.com             from: alice@example.com
+to: bob@example.com                 to: bob@example.com
+contact: alice@IP                   contact: alice@IP
+via: aliceIP                        via: proxyIP
+(SDP)                               via: aliceIP
+                                    (SDP)
+
+<--------------------------------- <----------------------------- 180
+                     via: aliceIP                     via: proxyIP
+                                                      via: aliceIP
+                                                      
+<--------------------------------- <----------------------------- 200
+                  via: aliceIP                       via: proxyIP
+                  contact: bob@IP                    via: aliceIP
+                  (SDP)                              contact: bob@IP
+                                                     (SDP)
+                                                      
+ACK bob@IP ----------------------> ACK bob@IP ------------------>
+from: alice@example.com             from: alice@example.com
+to: bob@example.com                 to: bob@example.com
+via: aliceIP                        via: proxyIP
+                                    via: aliceIP
+
+
+<============================= RTP ===============================>
+
+(alice hangs up)
+BYE bob@IP ----------------------> BYE bob@IP ------------------>
+from: alice@example.com             from: alice@example.com
+to: bob@example.com                 to: bob@example.com
+via: aliceIP                        via: proxyIP
+                                    via: aliceIP
+                                    
+<--------------------------------- <----------------------------- 200
+                  via: aliceIP                           via: proxyIP
+                                                         via: aliceIP    
